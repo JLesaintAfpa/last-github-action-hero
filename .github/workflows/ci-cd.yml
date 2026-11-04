@@ -22,12 +22,18 @@ jobs:
   ci: # Nom du job
     runs-on: ubuntu-26.04 # Machine "ubuntu" fournie par Github
     steps:
-      # TODO CI - 2.1. Récupération de l'équipement
+      - uses: actions/checkout@v7 # récupération du code
+        
+      - uses: actions/setup-node@v7 # configuration de NodeJS
+        with:
+         node-version: 24 # sélection de la version
+         cache: npm
+         
+      - run: npm ci # PREMIÈRE COMMANDE : installation des dépendances du projet sur le RUNNER
 
-      # TODO CI - 2.2 Préparation de l'équipe
-
-
-      # TODO CI - 3. Die Hard : vérification statique
+      - id: lint
+        name: Die Hard - Vérification statique - Lint
+        run: npm run lint
 
       # TODO CI - 4. Terminator : tests unitaires
 
@@ -36,18 +42,18 @@ jobs:
       # TODO CI - 6. Résumé 1ère mission -> Github Markdown
 
   # Phase 2 - CD
-  cd:
-    needs: ci # Dépendance avec CI
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-26.04
-    permissions:
-      contents: read
-      pages: write # permet d'écrire pour déployer une "Github page"
-      id-token: write # permet de vérifier si le déploiement vient d'une source légitime
-    environment:
-      name: github-pages # récupération des variables d'environnement "github pages"
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
+  # cd:
+  #   needs: ci # Dépendance avec CI
+  #   if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+  #   runs-on: ubuntu-26.04
+  #   permissions:
+  #     contents: read
+  #     pages: write # permet d'écrire pour déployer une "Github page"
+  #     id-token: write # permet de vérifier si le déploiement vient d'une source légitime
+  #   environment:
+  #     name: github-pages # récupération des variables d'environnement "github pages"
+  #     url: ${{ steps.deployment.outputs.page_url }}
+  #   steps:
       # TODO CD - 1. Rambo, derrière les lignes ennemies -> déploiement Github Page
 
       # TODO CD - 2. Résumé 2ème mission -> Github Markdown
